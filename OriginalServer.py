@@ -1,6 +1,8 @@
 #Import statements
 import socket
 import _thread
+import usernamePasswordDirectory.py
+
 
 #Setup Variables
 IP = "10.10.18.234"
@@ -14,6 +16,7 @@ global username
 username=""
 global password
 password=""
+sucessfulLogin=False
 
 
 #Beginning search for clients
@@ -63,6 +66,34 @@ def passwordVerification():
 
 
         #we will now call up our username and password dictionairy to verify the users credidentials
+
+        #first, we are checking if the username that the client entered is even in our database
+
+        if username in usernamePasswordDirectory.userPassList:
+            #if the username is in the directory, then we retrieve the actual user's real password and we compare it to
+            #the password provided by the client
+            realPassword = usernamePasswordDirectory.userPassList[username]
+
+            #if the password is correct, then a message is said to the client and the user is allowed to start sending messages
+            if password==realPassword:
+                sucessfulLogin=True
+                clientSuccessMessage=('passwordVerSucessful')
+                conn.send(clientSuccessMessage.encode('utf-8'))
+
+            #if the password is incorrect, then the login process starts again
+            else:
+                clientErrorMessage == "notCorrectPassword"
+
+                # sending an error message to the client letting them know why they have been denied access to the chat systems
+                conn.send(clientErrorMessage.encode('utf-8'))
+
+        #if the username isnt even in the directory, then the server lets the client know
+        else:
+            
+
+
+
+
 
 
 
