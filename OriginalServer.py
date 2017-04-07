@@ -80,6 +80,10 @@ def passwordVerification():
                 clientSuccessMessage=('passwordVerSucessful')
                 conn.send(clientSuccessMessage.encode('utf-8'))
 
+                #calling the main menu function
+                main()
+
+
             #if the password is incorrect, then the login process starts again
             else:
                 clientErrorMessage == "notCorrectPassword"
@@ -89,12 +93,18 @@ def passwordVerification():
 
         #if the username isnt even in the directory, then the server lets the client know
         else:
-            
+            clientErrorMessage == "notExpectedUsername"
+
+            # sending an error message to the client letting them know why they have been denied access to the chat systems
+            conn.send(clientErrorMessage.encode('utf-8'))
+
+            #restarting the password verification function so that the user will be allowed to re-enter their credidentials
+            passwordVerification()
 
 
-
-
-
+#this function triggers the main menu where the user will be allowed to do a variety of actions
+def main():
+    
 
 
 
