@@ -104,7 +104,8 @@ def passwordVerification():
 
 #this function triggers the main menu where the user will be allowed to do a variety of actions
 def main():
-    
+    None
+
 
 
 
