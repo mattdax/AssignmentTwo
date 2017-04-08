@@ -1,6 +1,6 @@
 import socket
-IP = "10.10.18.234"
-port = 443
+IP = ""
+port = 80
 Buffer = 1024
 print("Looking for Connections...")
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
