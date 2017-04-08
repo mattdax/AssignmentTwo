@@ -5,8 +5,8 @@ import socket #Sockets used for networking aspect of assignment
 programName = "Assignment 2"
 
 #Target location of connection
-host = '10.10.18.234'
-port = 443
+host = '10.0.1.19'
+port = 80
 buffer = 1024
 
 #The main Client class
@@ -61,33 +61,46 @@ class Client():
     def login(self):
         #Creates the login screen for usernames and password input
         self.screenB = Tk()
-
-        #Kills the old screen
         self.screenA.destroy()
 
         #Usual setup variables
         self.screenB.geometry("250x200")
         self.screenB.title(programName)
 
-        #Label 1
+        #Intro Label
         self.credentials = Label(self.screenB,text = "Enter your username and password")
         self.credentials.pack(side = TOP,pady = 10)
+
+        #Username Information
         self.usernameLabel = Label(self.screenB,text = "Username:")
         self.usernameLabel.pack(side = TOP, pady= 3)
         self.usernameEntry = Entry(self.screenB)
         self.usernameEntry.pack(side = TOP, pady = 3)
+
+        # Password Information
         self.passwordLabel = Label(self.screenB,text = "Password:")
-        self.passwordLabel.pack(side = TOP, pady= 3)
-        self.passwordEntry = Entry(self.screenB)
+        self.passwordLabel.pack(side = TOP, pady= 3,)
+        self.passwordEntry = Entry(self.screenB,show = '*')
         self.passwordEntry.pack(side = TOP, pady = 3)
-        self.loginButton = Button(self.screenB,text = "Login")
+
+        # Login Button
+        self.loginButton = Button(self.screenB,text = "Login",command = self.sendinfo)
+        self.loginButton.pack(side = TOP,pady = 3)
+
         #Window loop
         self.screenB.mainloop()
         exit()
+
     def newAccount(self):
         print()
+
+    #Function the begins connection with the server
     def connect(self):
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server.connect((host, port))
 
+    def sendinfo(self):
+        self.username = "@"+self.usernameEntry.get()
+        self.password = "@"+self.passwordEntry.get()
+        print(self.username,self.password)
 Client().__init__()
