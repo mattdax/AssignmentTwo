@@ -8,15 +8,15 @@ import usernamePasswordDirectory.py
 IP = "10.10.18.234"
 port = 443
 Buffer = 1024
-applicationName="Assignment 2"
-connection=False
-passwordVer=False
+applicationName= "Assignment 2"
+connection= False
+passwordVer= False
 clientErrorMessage=""
 global username
-username=""
+username= ""
 global password
-password=""
-sucessfulLogin=False
+password= ""
+sucessfulLogin= False
 
 
 #Beginning search for clients

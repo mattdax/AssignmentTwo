@@ -9,6 +9,7 @@ s.listen(5)
 conn, addr = s.accept()
 
 while True:
+    conn.send(input("Enter: ").encode('utf-8'))
     data = conn.recv(Buffer)
     # Decodes the encrypted data
     message = data.decode('utf-8')

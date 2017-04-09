@@ -1,6 +1,7 @@
 #Import Statements
 from tkinter import * #Tkinter for GUI
 import socket #Sockets used for networking aspect of assignment
+import _thread
 # Setup Variables
 programName = "Assignment 2"
 
@@ -8,15 +9,18 @@ programName = "Assignment 2"
 host = '10.0.1.19'
 port = 80
 buffer = 1024
-
 #The main Client class
 class Client():
     #Init function, ran on start up
     def __init__(self):
         try:
             #Attempts to connect to server and opens login window
+
+            #_thread.start_new_thread(Client.loadingMessages(self), self)
+
             self.connect()
             self.loginScreen()
+
             #Error window if cannot connect to server
         except ConnectionRefusedError:
 
@@ -92,15 +96,36 @@ class Client():
         exit()
 
     def newAccount(self):
-        print()
+        #Creates the window
+        self.screenC = Tk()
+        self.screenA.destroy()
+        self.screenC.geometry("300x400")
+        self.screenC.title(programName)
+
+
+        self.screenC.mainloop()
+        exit()
 
     #Function the begins connection with the server
     def connect(self):
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server.connect((host, port))
+       # client = self.server.accept()
 
     def sendinfo(self):
         self.username = "@"+self.usernameEntry.get()
         self.password = "@"+self.passwordEntry.get()
         print(self.username,self.password)
+    """def loadingMessages(self):
+        print("started")
+        data = ""
+        while data == "":
+            try:
+                data = self.server.recv(buffer)
+                print(data.decode('utf-8'))
+            except AttributeError:
+                print("did not work")
+                break
+                """""
 Client().__init__()
+
