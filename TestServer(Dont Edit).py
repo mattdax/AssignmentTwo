@@ -1,5 +1,5 @@
 import socket
-IP = ""
+IP = "10.10.18.187"
 port = 80
 Buffer = 1024
 print("Looking for Connections...")

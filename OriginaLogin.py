@@ -1,12 +1,13 @@
 #Import Statements
 from tkinter import * #Tkinter for GUI
 import socket #Sockets used for networking aspect of assignment
+import base64
 import _thread
 # Setup Variables
-programName = "Assignment 2"
+programName = "Project Mercury"
 
 #Target location of connection
-host = '10.0.1.19'
+host = '10.10.18.187'
 port = 80
 buffer = 1024
 #The main Client class
@@ -63,6 +64,7 @@ class Client():
         exit()
         #self.screenA.destroy()
     def login(self):
+
         #Creates the login screen for usernames and password input
         self.screenB = Tk()
         self.screenA.destroy()
@@ -99,12 +101,61 @@ class Client():
         #Creates the window
         self.screenC = Tk()
         self.screenA.destroy()
+
+        #Screen settings
         self.screenC.geometry("300x400")
         self.screenC.title(programName)
 
+        #Top Label
+        self.creationLabel = Label(self.screenC,text = "Complete the fields below to create an account")
+        self.creationLabel.pack(side = TOP,pady = 5)
 
+        #Username Creation
+        self.usernameCreation = Label(self.screenC,text = "Enter your username:")
+        self.usernameCreation.pack(side = TOP,pady = 5)
+
+        self.usernameCreationEntry = Entry(self.screenC)
+        self.usernameCreationEntry.pack(side = TOP, pady = 3)
+
+        # Email Creation
+        self.email = Label(self.screenC,text = "Enter your email: ")
+        self.email.pack(side = TOP, pady = 3)
+
+        self.email = Entry(self.screenC)
+        self.email.pack(side = TOP,pady = 3)
+
+
+        # Password Creation
+        self.passwordCreation = Label(self.screenC,text = "Enter your password: ")
+        self.passwordCreation.pack(side = TOP, pady = 3)
+
+        self.passwordCreationEntry = Entry(self.screenC)
+        self.passwordCreationEntry.pack(side = TOP,pady = 3)
+
+        #Re-enter password
+        self.repassword = Label(self.screenC, text = "Re-enter your password: ")
+        self.repassword.pack(side = TOP,pady = 3)
+
+        self.repasswordEntry = Entry(self.screenC)
+        self.repasswordEntry.pack(side = TOP, pady = 3)
+
+        # Create Button
+        signup = Button(self.screenC,text = "Create",command = self.getCreation)
+        signup.pack(side = TOP,pady = 3)
+
+        #Window Loop
         self.screenC.mainloop()
         exit()
+
+    def getCreation(self):
+        username = self.usernameCreationEntry.get()
+        password = self.passwordCreationEntry.get()
+        email = self.email.get()
+        repassword = self.repasswordEntry.get()
+
+        if password != repassword:
+            
+
 
     #Function the begins connection with the server
     def connect(self):
@@ -116,7 +167,8 @@ class Client():
         self.username = "@"+self.usernameEntry.get()
         self.password = "@"+self.passwordEntry.get()
         print(self.username,self.password)
-    """def loadingMessages(self):
+
+    """"def loadingMessages(self):
         print("started")
         data = ""
         while data == "":
@@ -126,6 +178,7 @@ class Client():
             except AttributeError:
                 print("did not work")
                 break
-                """""
+                """
+
 Client().__init__()
 
