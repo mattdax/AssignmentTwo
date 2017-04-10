@@ -125,6 +125,9 @@ def Messages(Buffer):
         else:
             print("Data:", message)
 
+        data = input(">>>")
+        c.send(data.encode('utf-8'))
+
 #Introduction to threading, still learning about this
 _thread.start_new_thread(Messages ,(Buffer, ))
 
