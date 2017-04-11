@@ -7,7 +7,7 @@ import _thread
 programName = "Project Mercury"
 
 #Target location of connection
-host = '10.10.18.187'
+host = '10.10.1.19'
 port = 80
 buffer = 1024
 #The main Client class
@@ -152,12 +152,39 @@ class Client():
         password = self.passwordCreationEntry.get()
         email = self.email.get()
         repassword = self.repasswordEntry.get()
-
+        # If re-entering the password does not work
         if password != repassword:
-            
+            #Creates error window
+            self.passwordMatch = Tk()
+            self.screenC.destroy()
+            #Setup variables
+            self.passwordMatch.geometry("300x200")
+            self.passwordMatch.title(programName)
+            # Error label
+            self.match = Label(self.passwordMatch,text = "Passwords do not match")
+            self.match.pack(side = TOP)
 
+            #Window loop
+            self.passwordMatch.mainloop()
+            self.newAccount()
+
+        if username == "" or password == "" or email == "":
+            # Creates error window
+            self.usernameMatch = Tk()
+            self.screenC.destroy()
+            # Setup variables
+            self.usernameMatch.geometry("300x200")
+            self.usernameMatch.title(programName)
+            # Error label
+            self.match = Label(self.usernameMatch, text="One of the fields has been left empty")
+            self.match.pack(side=TOP)
+
+            # Window loop
+            self.usernameMatch.mainloop()
+            self.newAccount()
 
     #Function the begins connection with the server
+
     def connect(self):
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server.connect((host, port))
