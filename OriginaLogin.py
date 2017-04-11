@@ -1,13 +1,14 @@
 #Import Statements
 from tkinter import * #Tkinter for GUI
 import socket #Sockets used for networking aspect of assignment
+import time
 import base64
 import _thread
 # Setup Variables
 programName = "Project Mercury"
 
 #Target location of connection
-host = '10.10.1.19'
+host = '10.10.18.187'
 port = 80
 buffer = 1024
 #The main Client class
@@ -152,36 +153,47 @@ class Client():
         password = self.passwordCreationEntry.get()
         email = self.email.get()
         repassword = self.repasswordEntry.get()
-        # If re-entering the password does not work
+
+        # If re-entering the password does not match the the original password
         if password != repassword:
             #Creates error window
             self.passwordMatch = Tk()
-            self.screenC.destroy()
             #Setup variables
             self.passwordMatch.geometry("300x200")
             self.passwordMatch.title(programName)
+
             # Error label
             self.match = Label(self.passwordMatch,text = "Passwords do not match")
             self.match.pack(side = TOP)
 
             #Window loop
             self.passwordMatch.mainloop()
-            self.newAccount()
+            time.sleep(2)
 
+        # Checks if any of the fields have been left blank
         if username == "" or password == "" or email == "":
+
             # Creates error window
             self.usernameMatch = Tk()
-            self.screenC.destroy()
+
             # Setup variables
             self.usernameMatch.geometry("300x200")
             self.usernameMatch.title(programName)
+
             # Error label
             self.match = Label(self.usernameMatch, text="One of the fields has been left empty")
             self.match.pack(side=TOP)
 
             # Window loop
             self.usernameMatch.mainloop()
-            self.newAccount()
+
+        #Prepares to send the information to the server, where it will go through a checking process
+
+        self.finalUsername = '#'+username
+        self.finalPassword = '#'+password
+        self.finalEmail = "#"+email
+        self.server.send((self.finalEmail,self.finalPassword,self.finalUsername).encode('utf-8'))
+
 
     #Function the begins connection with the server
 
