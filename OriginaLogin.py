@@ -4,12 +4,13 @@ import socket #Sockets used for networking aspect of assignment
 import time
 import base64
 import _thread
+
 # Setup Variables
 programName = "Project Mercury"
 
 #Target location of connection
-host = '10.10.18.187'
-port = 80
+host = '192.168.43.86'
+port = 6000
 buffer = 1024
 #The main Client class
 class Client():
@@ -17,8 +18,6 @@ class Client():
     def __init__(self):
         try:
             #Attempts to connect to server and opens login window
-
-            #_thread.start_new_thread(Client.loadingMessages(self), self)
 
             self.connect()
             self.loginScreen()
@@ -44,7 +43,6 @@ class Client():
     def loginScreen(self):
         #Creates window
         self.screenA = Tk()
-
         #Setup variables
         self.screenA.geometry("250x200")
         self.screenA.title(programName)
@@ -97,7 +95,6 @@ class Client():
         #Window loop
         self.screenB.mainloop()
         exit()
-
     def newAccount(self):
         #Creates the window
         self.screenC = Tk()
@@ -190,34 +187,34 @@ class Client():
         #Prepares to send the information to the server, where it will go through a checking process
 
         self.finalUsername = '#'+username
-        self.finalPassword = '#'+password
-        self.finalEmail = "#"+email
-        self.server.send((self.finalEmail,self.finalPassword,self.finalUsername).encode('utf-8'))
+        self.finalPassword = '|'+password
+        self.finalEmail = ">"+email
+        self.finalCreation = self.finalUsername + self.finalPassword + self.finalEmail
 
+        self.server.send(self.finalCreation.encode('utf-8'))
 
     #Function the begins connection with the server
 
     def connect(self):
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server.connect((host, port))
+      #  self.server.listen(5)
+       # self.conn = self.server.accept()
+
        # client = self.server.accept()
 
     def sendinfo(self):
         self.username = "@"+self.usernameEntry.get()
-        self.password = "@"+self.passwordEntry.get()
-        print(self.username,self.password)
+        self.password = "$"+self.passwordEntry.get()
+        self.tosend = self.username +self.password
+        self.server.send(self.tosend.encode('utf-8'))
+        #self.server.send(self.password.encode('utf-8'))
+#def loadingMessages(self):
 
-    """"def loadingMessages(self):
-        print("started")
-        data = ""
-        while data == "":
-            try:
-                data = self.server.recv(buffer)
-                print(data.decode('utf-8'))
-            except AttributeError:
-                print("did not work")
-                break
-                """
+ #   for i in range(0,1,100000):
+   #     data = self.server.recv(buffer)
+  #      print(data.decode())
+
 
 Client().__init__()
-
+#_thread.start_new_thread(Client, args)
