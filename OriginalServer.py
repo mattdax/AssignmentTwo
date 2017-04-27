@@ -34,7 +34,22 @@ def passwordVerification():
     #waiting for the password to be sent
     while True:
         # waiting for the client to send the username and password
-        username, password = conn.recv(Buffer)
+        jumble = conn.recv(Buffer)
+        
+        #seperating the variable sent by the client into a username and a password variable
+        
+        jumble=str(jumble)
+        newJumble=jumble[3:len(jumble)]
+        
+        for i in range(0,len(newJumble),1):
+            #the $ sign means that it is the password. Therefore whatever is before it is the username
+            if newJumble[i]=='$':
+                username=newJumble[0:i-1]
+                password=newJumble[i:len(newJumble-1)]
+               
+        print (username)
+        print (password)
+        #finding the special username and password signs and using them to 
 
         #checking if the string sent by the client starts with '@'. The client attaches an '@' sign to all usernames and
         #password
