@@ -41,28 +41,35 @@ class Client():
             exit()
         #Login screen that first asks user if they are new or returning
     def loginScreen(self):
-        #Creates window
-        self.screenA = Tk()
-        #Setup variables
-        self.screenA.geometry("250x200")
-        self.screenA.title(programName)
+        if os.path.isfile("loginInfo.txt") == Else:
 
-        #Label
-        self.account = Label(self.screenA,text = "Do you have an account already?")
-        self.account.pack(side = TOP)
+            #Creates window
+            self.screenA = Tk()
+            
+            #Setup variables
+            self.screenA.geometry("250x200")
+            self.screenA.title(programName)
+
+            #Label
+            self.account = Label(self.screenA,text = "Do you have an account already?")
+            self.account.pack(side = TOP)
 
 
-        #Yes and No buttons
-        self.loginOption = Button(self.screenA,text = "Yes", command = self.login)
-        self.loginOption.pack(side = BOTTOM, pady = 3)
+            #Yes and No buttons
+            self.loginOption = Button(self.screenA,text = "Yes", command = self.login)
+            self.loginOption.pack(side = BOTTOM, pady = 3)
 
-        self.newOption = Button(self.screenA,text = "No",command = self.newAccount)
-        self.newOption.pack(side = BOTTOM, pady = 3)
+            self.newOption = Button(self.screenA,text = "No",command = self.newAccount)
+            self.newOption.pack(side = BOTTOM, pady = 3)
 
-        #Window loop
-        self.screenA.mainloop()
-        exit()
-        #self.screenA.destroy()
+            #Window loop
+            self.screenA.mainloop()
+            exit()
+            #self.screenA.destroy()
+        else:
+            self.useLoginInfo()
+
+
     def login(self):
 
         #Creates the login screen for usernames and password input
@@ -219,25 +226,78 @@ class Client():
   #      print(data.decode())
 
     def saveInfor(self):
-        self.save = Tk()
+        # Checks if file exists
+        if os.path.isfile("loginInfo.txt") == False:
+            
+            #Creates the window
+            self.save = Tk()
 
-        self.save.geometry("300x300")
-        self.save.title(programName)
+            # Setup vairables
+            self.save.geometry("300x300")
+            self.save.title(programName)
 
-        Label1 = Label(self.save,text = "Would you like to save your login information for later?")
-        Label1.pack(side = TOP, pady = 3)
-        save = Button(self.save,text = "Yes",command = self.saveToFile)
-        save.pack(side = TOP,pady= 3)
-        dontSave = Button(self.save,text = "No",command = self.chatWindow)
-        dontSave.pack(side = TOP,pady = 3)
+            #Buttons and Labels   
+            Label1 = Label(self.save,text = "Would you like to save your login information for later?")
+            Label1.pack(side = TOP, pady = 3)
+            save = Button(self.save,text = "Yes",command = self.saveToFile)
+            save.pack(side = TOP,pady= 3)
+            dontSave = Button(self.save,text = "No",command = self.chatWindow)
+            dontSave.pack(side = TOP,pady = 3)
+        else: 
+            self.useLoginInfo()
 
         self.save.mainloop()
 
     def saveToFile(self):
-        open("loginInfo.txt")
+      #Creates Login file
+       saveLogin = open("loginInfo.txt","a")
+       
+    #Writes login data to file
+       saveLogin.write(self.username + "\n" + self.password + "\n" + self.email)
+
+    def useLoginInfo():
+        # Not implemented as of yet.
+        savedInf = open("loginInfo.txt","a")
+
 
     def chatWindow(self):
-        print()
+        
+        # Creates the window
+        self.Window = Tk()
+        
+        # Window and size
+        self.Window.geometry("400x500")
+        self.Window.title(programName)
+
+
+        #Chat Log
+        self.ChatLog = Text(self.Window, bd=0, bg="white", height="8", width="50", font="Arial",)
+        self.ChatLog.insert(END, "Connecting to your partner..\n")
+        self.ChatLog.config(state=DISABLED)
+        
+        #Scroll Bar
+        self.scrollbar = Scrollbar(self.Window, command=ChatLog.yview, cursor="heart")
+        self.ChatLog['yscrollcommand'] = self.scrollbar.set
+
+        #Send 
+        self.SendButton = Button(self.Window, font=30, text="Send", width="12", height=5,
+                    bd=0, bg="#FFBF00", activebackground="#FACC2E",
+                    command=ClickAction)
+
+        #Entry Box where messages are typed
+        self.EntryBox = Text(self.Window, bd=0, bg="white",width="29", height="5", font="Arial")
+        self.EntryBox.bind("<Return>", DisableEntry)
+        self.EntryBox.bind("<KeyRelease-Return>", PressAction)
+
+        #Placing on screen
+        scrollbar.place(x=376,y=6, height=386)
+        ChatLog.place(x=6,y=6, height=386, width=370)
+        EntryBox.place(x=128, y=401, height=90, width=265)
+        SendButton.place(x=6, y=401, height=90)
+
+
+        #Window loop
+        self.Window.mainloop()
 
 Client().__init__()
 #_thread.start_new_thread(Client, args)
