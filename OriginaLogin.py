@@ -9,8 +9,8 @@ import _thread
 programName = "Project Mercury"
 
 #Target location of connection
-host = '192.168.43.86'
-port = 6000
+host = '10.10.25.3'
+port = 80
 buffer = 1024
 #The main Client class
 class Client():
@@ -21,7 +21,7 @@ class Client():
 
             self.connect()
             self.loginScreen()
-
+            print('Waiting for server...')
             #Error window if cannot connect to server
         except ConnectionRefusedError:
 
@@ -54,9 +54,10 @@ class Client():
 
         #Yes and No buttons
         self.loginOption = Button(self.screenA,text = "Yes", command = self.login)
-        self.loginOption.pack(side = BOTTOM)
+        self.loginOption.pack(side = BOTTOM, pady = 3)
+
         self.newOption = Button(self.screenA,text = "No",command = self.newAccount)
-        self.newOption.pack(side = BOTTOM)
+        self.newOption.pack(side = BOTTOM, pady = 3)
 
         #Window loop
         self.screenA.mainloop()
@@ -192,6 +193,8 @@ class Client():
         self.finalCreation = self.finalUsername + self.finalPassword + self.finalEmail
 
         self.server.send(self.finalCreation.encode('utf-8'))
+        self.saveInfor()
+
 
     #Function the begins connection with the server
 
@@ -208,13 +211,33 @@ class Client():
         self.password = "$"+self.passwordEntry.get()
         self.tosend = self.username +self.password
         self.server.send(self.tosend.encode('utf-8'))
-        #self.server.send(self.password.encode('utf-8'))
+
 #def loadingMessages(self):
 
  #   for i in range(0,1,100000):
    #     data = self.server.recv(buffer)
   #      print(data.decode())
 
+    def saveInfor(self):
+        self.save = Tk()
+
+        self.save.geometry("300x300")
+        self.save.title(programName)
+
+        Label1 = Label(self.save,text = "Would you like to save your login information for later?")
+        Label1.pack(side = TOP, pady = 3)
+        save = Button(self.save,text = "Yes",command = self.saveToFile)
+        save.pack(side = TOP,pady= 3)
+        dontSave = Button(self.save,text = "No",command = self.chatWindow)
+        dontSave.pack(side = TOP,pady = 3)
+
+        self.save.mainloop()
+
+    def saveToFile(self):
+        open("loginInfo.txt")
+
+    def chatWindow(self):
+        print()
 
 Client().__init__()
 #_thread.start_new_thread(Client, args)
