@@ -4,13 +4,13 @@ import socket #Sockets used for networking aspect of assignment
 import time
 import base64
 import _thread
-
+import os
 # Setup Variables
 programName = "Project Mercury"
 
 #Target location of connection
-host = '10.10.25.3'
-port = 80
+host = '10.10.18.223'
+port = 30000
 buffer = 1024
 #The main Client class
 class Client():
@@ -41,7 +41,7 @@ class Client():
             exit()
         #Login screen that first asks user if they are new or returning
     def loginScreen(self):
-        if os.path.isfile("loginInfo.txt") == Else:
+        if os.path.isfile("loginInfo.txt") == False:
 
             #Creates window
             self.screenA = Tk()
@@ -216,8 +216,9 @@ class Client():
     def sendinfo(self):
         self.username = "@"+self.usernameEntry.get()
         self.password = "$"+self.passwordEntry.get()
-        self.tosend = self.username +self.password
+        self.tosend = self.username + self.password
         self.server.send(self.tosend.encode('utf-8'))
+
 
 #def loadingMessages(self):
 
@@ -260,6 +261,34 @@ class Client():
         savedInf = open("loginInfo.txt","a")
 
 
+# Events that occur when a message is sent and when a message is being loaded
+
+    """These two functions essentially update the message box when a new message comes in, it
+    updates the message box when a user sends a message, prevents the user from being able to type in the 
+    message box.  """
+    def PressAction(event, self):
+        self.EntryBox.config(state=NORMAL)
+        ClickAction()
+
+    def DisableEntry(event, self):
+        self.EntryBox.config(state=DISABLED)
+
+    #Functions that takes messages and sends them to server. 
+    def ClickAction(self):
+        #Write message to chat window
+        self.EntryText = FilteredMessage(self.EntryBox.get("0.0",END))
+        LoadMyEntry(self.ChatLog, self.EntryText)
+
+        #Scroll to the bottom of chat windows
+        self.ChatLog.yview(END)
+
+        #Erase previous message in Entry Box
+        self.EntryBox.delete("0.0",END)
+            
+        #Send my mesage to all others
+        self.server.send(EntryText.encode('utf-8'))
+
+
     def chatWindow(self):
         
         # Creates the window
@@ -290,10 +319,10 @@ class Client():
         self.EntryBox.bind("<KeyRelease-Return>", PressAction)
 
         #Placing on screen
-        scrollbar.place(x=376,y=6, height=386)
-        ChatLog.place(x=6,y=6, height=386, width=370)
-        EntryBox.place(x=128, y=401, height=90, width=265)
-        SendButton.place(x=6, y=401, height=90)
+        self.scrollbar.place(x=376,y=6, height=386)
+        self.ChatLog.place(x=6,y=6, height=386, width=370)
+        self.EntryBox.place(x=128, y=401, height=90, width=265)
+        self.SendButton.place(x=6, y=401, height=90)
 
 
         #Window loop

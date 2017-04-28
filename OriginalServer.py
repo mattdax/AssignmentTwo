@@ -1,12 +1,12 @@
 #Import statements
 import socket
 import _thread
-import usernamePasswordDirectory.py
+import usernamePasswordDirectory
 
 
 #Setup Variables
-IP = "10.10.18.234"
-port = 443
+IP = "10.10.18.223"
+port = 30000
 Buffer = 1024
 applicationName= "Assignment 2"
 connection= False
