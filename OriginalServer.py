@@ -151,3 +151,31 @@ while 1:
     pass
 
 
+"""
+
+	def verifyLogin(self):
+		for i in range(0,len(self.loginstuff),1):
+			if self.loginstuff[i] == "$":
+				self.atpoint = i
+		self.username = self.loginstuff[1:self.atpoint]
+		self.password = self.loginstuff[self.atpoint+1:]
+		self.tocheck = self.username+self.password
+		with open("accounts.txt","r") as openfile:
+			for line in openfile:
+				if self.tocheck in line:
+					self.conn.send("Good Login".encode('utf-8'))
+
+
+	def createNewLogin(self):
+		for i in range(0,len(self.loginstuff),1):
+			if self.loginstuff[i] == "|":
+				self.passwordpoint = i
+			if self.loginstuff[i] == ">":
+				self.emailpoint = i
+		self.usernameCreate = self.loginstuff[1:self.passwordpoint]
+		self.passwordCreate = self.loginstuff[self.passwordpoint+1:self.emailpoint]
+		self.emailCreate = self.loginstuff[self.emailpoint+1:]
+		print(self.usernameCreate,self.passwordCreate,self.emailCreate)
+
+"""
+
