@@ -9,7 +9,7 @@ import os
 programName = "Project Mercury"
 
 #Target location of connection
-host = '10.10.18.223'
+host = '10.10.19.162'
 port = 30000
 buffer = 1024
 #The main Client class
@@ -256,7 +256,7 @@ class Client():
     #Writes login data to file
        saveLogin.write(self.username + "\n" + self.password + "\n" + self.email)
 
-    def useLoginInfo():
+    def useLoginInfo(self):
         # Not implemented as of yet.
         savedInf = open("loginInfo.txt","a")
 
@@ -266,18 +266,45 @@ class Client():
     """These two functions essentially update the message box when a new message comes in, it
     updates the message box when a user sends a message, prevents the user from being able to type in the 
     message box.  """
-    def PressAction(event, self):
+    def PressAction(self, event):
         self.EntryBox.config(state=NORMAL)
-        ClickAction()
+        self.ClickAction()
 
-    def DisableEntry(event, self):
+    def DisableEntry(self,event):
         self.EntryBox.config(state=DISABLED)
 
-    #Functions that takes messages and sends them to server. 
+    def FilteredMessage(self):
+        """
+        Filter out all useless white lines at the end of a string,
+        returns a new, beautifully filtered string.
+        """
+        EndFiltered = ''
+        for i in range(len(self.EntryText) - 1, -1, -1):
+            if self.EntryText[i] != '\n':
+                EndFiltered = self.EntryText[0:i + 1]
+                break
+        for i in range(0, len(EndFiltered), 1):
+            if EndFiltered[i] != "\n":
+                return EndFiltered[i:] + '\n'
+        return ''
+
+
+    def LoadMyEntry(self):
+        if self.EntryText != '':
+            self.ChatLog.config(state=NORMAL)
+            if self.ChatLog.index('end') != None:
+                LineNumber = float(self.ChatLog.index('end')) - 1.0
+                self.ChatLog.insert(END, "You: " + self.EntryText)
+                self.ChatLog.tag_add("You", LineNumber, LineNumber + 0.4)
+                self.ChatLog.tag_config("You", foreground="#FF8000", font=("Arial", 12, "bold"))
+                self.ChatLog.config(state=DISABLED)
+                self.ChatLog.yview(END)
+
+    #Functions that takes messages and sends them to server.
     def ClickAction(self):
         #Write message to chat window
-        self.EntryText = FilteredMessage(self.EntryBox.get("0.0",END))
-        LoadMyEntry(self.ChatLog, self.EntryText)
+        self.EntryText = self.FilteredMessage(self.EntryBox.get("0.0",END))
+        self.LoadMyEntry(self.ChatLog, self.EntryText)
 
         #Scroll to the bottom of chat windows
         self.ChatLog.yview(END)
@@ -286,7 +313,7 @@ class Client():
         self.EntryBox.delete("0.0",END)
             
         #Send my mesage to all others
-        self.server.send(EntryText.encode('utf-8'))
+        self.server.send(self.EntryText.encode('utf-8'))
 
 
     def chatWindow(self):
@@ -305,18 +332,18 @@ class Client():
         self.ChatLog.config(state=DISABLED)
         
         #Scroll Bar
-        self.scrollbar = Scrollbar(self.Window, command=ChatLog.yview, cursor="heart")
+        self.scrollbar = Scrollbar(self.Window, command=self.ChatLog.yview, cursor="heart")
         self.ChatLog['yscrollcommand'] = self.scrollbar.set
 
         #Send 
         self.SendButton = Button(self.Window, font=30, text="Send", width="12", height=5,
                     bd=0, bg="#FFBF00", activebackground="#FACC2E",
-                    command=ClickAction)
+                    command=self.ClickAction)
 
         #Entry Box where messages are typed
         self.EntryBox = Text(self.Window, bd=0, bg="white",width="29", height="5", font="Arial")
-        self.EntryBox.bind("<Return>", DisableEntry)
-        self.EntryBox.bind("<KeyRelease-Return>", PressAction)
+        self.EntryBox.bind("<Return>", self.DisableEntry)
+        self.EntryBox.bind("<KeyRelease-Return>", self.PressAction)
 
         #Placing on screen
         self.scrollbar.place(x=376,y=6, height=386)

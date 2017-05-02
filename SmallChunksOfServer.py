@@ -1,5 +1,5 @@
 import socket
-IP = "10.10.25.3"
+IP = "10.10.19.162"
 port = 30000
 buffer = 1024
 applicationName = "Project Mercury"
@@ -37,7 +37,15 @@ class Server():
 
 
 	def createNewLogin(self):
-		print("Not done")
+		for i in range(0,len(self.loginstuff),1):
+			if self.loginstuff[i] == "|":
+				self.passwordpoint = i
+			if self.loginstuff[i] == ">":
+				self.emailpoint = i
+		self.usernameCreate = self.loginstuff[1:self.passwordpoint]
+		self.passwordCreate = self.loginstuff[self.passwordpoint+1:self.emailpoint]
+		self.emailCreate = self.loginstuff[self.emailpoint+1:]
+		print(self.usernameCreate,self.passwordCreate,self.emailCreate) 
 	
 
 
