@@ -24,6 +24,7 @@ class Server():
 			self.verifyLogin()
 
 	def verifyLogin(self):
+		print("trying")
 		for i in range(0,len(self.loginstuff),1):
 			if self.loginstuff[i] == "$":
 				self.atpoint = i
@@ -33,7 +34,9 @@ class Server():
 		with open("accounts.txt","r") as openfile:
 			for line in openfile:
 				if self.tocheck in line:
-					self.conn.send("Good Login".encode('utf-8'))
+					self.conn.send("LoginIsGood".encode('utf-8'))
+				else:
+					self.conn.send("LoginIsBad".encode('utf-8'))
 
 
 	def createNewLogin(self):
@@ -45,8 +48,10 @@ class Server():
 		self.usernameCreate = self.loginstuff[1:self.passwordpoint]
 		self.passwordCreate = self.loginstuff[self.passwordpoint+1:self.emailpoint]
 		self.emailCreate = self.loginstuff[self.emailpoint+1:]
-		print(self.usernameCreate,self.passwordCreate,self.emailCreate) 
-	
-
+		print(self.usernameCreate,self.passwordCreate,self.emailCreate)
+		with open ("accounts.txt","a") as openfile:
+			openfile.write(self.usernameCreate+self.passwordCreate)
+			openfile.close()
+			print("Created new account")
 
 Server().__init__()
