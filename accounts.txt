@@ -1,5 +1,1 @@
-<<<<<<< HEAD
-matt$matt;@riaz$riaz;
-=======
-mattmattmattmatt
->>>>>>> origin/master
+@matt$matt;@riaz$riaz;
