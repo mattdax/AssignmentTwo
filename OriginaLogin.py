@@ -9,7 +9,7 @@ import os
 programName = "Project Mercury"
 
 #Target location of connection
-host = '10.10.19.162'
+host = '192.168.2.76'
 port = 30000
 buffer = 1024
 #The main Client class
@@ -216,8 +216,11 @@ class Client():
     def sendinfo(self):
         self.username = "@"+self.usernameEntry.get()
         self.password = "$"+self.passwordEntry.get()
+        print(self.password)
+        print(self.username)
         self.tosend = self.username + self.password
-        self.server.send(self.tosend.encode('utf-8'))
+        print(self.tosend)
+        self.server.send(self.tosend.encode())
 
 
 #def loadingMessages(self):

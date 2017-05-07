@@ -7,7 +7,7 @@ accountsFile=open('accounts.txt','r')
 
 
 #Setup Variables
-IP = "10.10.18.223"
+IP = "192.168.2.76"
 port = 30000
 Buffer = 1024
 applicationName= "Assignment 2"
@@ -31,8 +31,9 @@ def waitForClient():
     conn, addr = s.accept()
 
     #making a new thread so that the program can keep searching for new connections
-    _thread.start_new_thread(passwordVerification(),args=(conn,addr))
+    #_thread.start_new_thread(passwordVerification(),args=(conn,addr))
 
+    passwordVerification(conn,addr)
 
 #this function will authenticate the username and password of the user
 def passwordVerification(conn,addr):
@@ -45,13 +46,15 @@ def passwordVerification(conn,addr):
         #seperating the variable sent by the client into a username and a password variable
         
         jumble=str(jumble)
+        print(jumble)
         newJumble=jumble[3:len(jumble)]
         
         for i in range(0,len(newJumble),1):
             #the $ sign means that it is the password. Therefore whatever is before it is the username
             if newJumble[i]=='$':
-                username=newJumble[0:i-1]
-                password=newJumble[i:len(newJumble-1)]
+                username=newJumble[0:i]
+                password=newJumble[i:len(newJumble)-1]
+
                
         print (username)
         print (password)
@@ -167,7 +170,7 @@ def Messages(Buffer,conn,addr):
         c.send(data.encode('utf-8'))
 
 #Introduction to threading, still learning about this
-_thread.start_new_thread(Messages ,(Buffer, ))
+_thread.start_new_thread(waitForClient())
 
 #Runs the program
 while 1:
