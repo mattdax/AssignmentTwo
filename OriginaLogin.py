@@ -3,7 +3,7 @@ from tkinter import * #Tkinter for GUI
 import socket #Sockets used for networking aspect of assignment
 import time
 import base64
-import _thread
+from threading import _start_new_thread
 import os
 # Setup Variables
 programName = "Project Mercury"
@@ -20,9 +20,11 @@ class Client():
             #Attempts to connect to server and opens login window
 
             self.connect()
+            _start_new_thread(self.TestGet, ())
             self.loginScreen()
             print('Waiting for server...')
             #Error window if cannot connect to server
+            
         except ConnectionRefusedError:
 
             #Creates error window
@@ -208,8 +210,7 @@ class Client():
     def connect(self):
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server.connect((host, port))
-      #  self.server.listen(5)
-       # self.conn = self.server.accept()
+
 
        # client = self.server.accept()
 
@@ -222,12 +223,6 @@ class Client():
         print(self.tosend)
         self.server.send(self.tosend.encode())
 
-
-#def loadingMessages(self):
-
- #   for i in range(0,1,100000):
-   #     data = self.server.recv(buffer)
-  #      print(data.decode())
 
     def saveInfor(self):
         # Checks if file exists
@@ -263,12 +258,24 @@ class Client():
         # Not implemented as of yet.
         savedInf = open("loginInfo.txt","a")
 
+    def TestGet(self):
+         print("Thread has started")
+         while 1:
+            print("Running")
+            data = self.server.recv(buffer)
+            print("Got it")
+            if data.decode('utf-8') != '':
+                print(data.decode('utf-8'))
 
+                #if self.Window.focus_get() == None:
+            else:
+                print(data.decode('utf-8'))
+"""
 # Events that occur when a message is sent and when a message is being loaded
 
-    """These two functions essentially update the message box when a new message comes in, it
+    These two functions essentially update the message box when a new message comes in, it
     updates the message box when a user sends a message, prevents the user from being able to type in the 
-    message box.  """
+    message box.
     def PressAction(self, event):
         self.EntryBox.config(state=NORMAL)
         self.ClickAction()
@@ -277,10 +284,10 @@ class Client():
         self.EntryBox.config(state=DISABLED)
 
     def FilteredMessage(self):
-        """
+    
         Filter out all useless white lines at the end of a string,
         returns a new, beautifully filtered string.
-        """
+        
         EndFiltered = ''
         for i in range(len(self.EntryText) - 1, -1, -1):
             if self.EntryText[i] != '\n':
@@ -303,11 +310,26 @@ class Client():
                 self.ChatLog.config(state=DISABLED)
                 self.ChatLog.yview(END)
 
+    def LoadOtherEntry(self):
+        if self.EntryText != '':
+            self.ChatLog.config(state=NORMAL)
+            if self.ChatLog.index('end') != None:
+                try:
+                    self.LineNumber = float(self.ChatLog.index('end')) - 1.0
+                except:
+                    pass
+                self.ChatLog.insert(END, "Other: " + self.EntryText)
+                self.ChatLog.tag_add("Other", self.LineNumber, self.LineNumber + 0.6)
+                self.ChatLog.tag_config("Other", foreground="#04B404", font=("Arial", 12, "bold"))
+                self.ChatLog.config(state=DISABLED)
+                self.ChatLog.yview(END)
+
     #Functions that takes messages and sends them to server.
     def ClickAction(self):
         #Write message to chat window
-        self.EntryText = self.FilteredMessage(self.EntryBox.get("0.0",END))
-        self.LoadMyEntry(self.ChatLog, self.EntryText)
+        self.EntryText = self.EntryText.get()
+        self.EntryText = self.FilteredMessage()
+        self.LoadMyEntry()
 
         #Scroll to the bottom of chat windows
         self.ChatLog.yview(END)
@@ -323,7 +345,8 @@ class Client():
         
         # Creates the window
         self.Window = Tk()
-        
+        _thread.start_new_thread(self.getMessages, ())
+
         # Window and size
         self.Window.geometry("400x500")
         self.Window.title(programName)
@@ -357,6 +380,37 @@ class Client():
 
         #Window loop
         self.Window.mainloop()
+    def LoadConnectionInfo(self):
+        if self.EntryText != '':
+            self.ChatLog.config(state = NORMAL)
+            if self.ChatLog.index('end') !=None:
+                self.ChatLog.insert(END, self.EntryText + '\n')
+                self.ChatLog.config(state=DISABLED)
+                self.ChatLog.yview(END)
+
+    def getMessages(self):
+        self.EntryText = '[ Succesfully connected ]\n---------------------------------------------------------------'
+        self.LoadConnectionInfo()
+
+        while 1:
+            try:
+                data = self.server.recv(buffer)
+            except:
+                self.EntryText = "\n [ Your partner has disconnected ] \n"
+                self.LoadConnectionInfo()
+                break
+            if data != '':
+                self.LoadOtherEntry()
+                #if self.Window.focus_get() == None:
+            else:
+                self.EntryText = "\n [ Your partner has disconnected ] \n"
+                self.LoadConnectionInfo()
+                break
+
+
+
+"""
 
 Client().__init__()
+
 #_thread.start_new_thread(Client, args)
