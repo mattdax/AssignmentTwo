@@ -3,9 +3,12 @@ import socket
 import _thread
 import datetime
 
+#configuring time settings
+now = datetime.datetime.now()
+
 #opening the accounts file so that it can be read
 accountsFile=open('accounts.txt','r')
-
+logFile=open('connectionLogs.txt','w')
 
 #Setup Variables
 IP = "192.168.2.76"
@@ -31,6 +34,7 @@ def waitForClient():
     s.listen(5)
     conn, addr = s.accept()
 
+    logFile.write("["+now.strftime("%Y-%m-%d %H:%M")+"] Connection from",addr)
     #making a new thread so that the program can keep searching for new connections
     #_thread.start_new_thread(passwordVerification(),args=(conn,addr))
 
@@ -43,6 +47,7 @@ def passwordVerification(conn,addr):
     while True:
         # waiting for the client to send the username and password
         jumble = conn.recv(Buffer)
+
         
         #seperating the variable sent by the client into a username and a password variable
         
