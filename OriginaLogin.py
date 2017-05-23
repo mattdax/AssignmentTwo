@@ -9,7 +9,7 @@ import os
 programName = "Project Mercury"
 
 #Target location of connection
-host = '192.168.2.76'
+host = '10.10.0.38'
 port = 30000
 buffer = 1024
 #The main Client class
