@@ -1,14 +1,12 @@
 import socket
 from threading import _start_new_thread
-IP = "10.10.19.21"
+IP = "10.10.0.38"
 port = 30000
 buffer = 1024
 applicationName = "Project Mercury"
 	
 class Server():
 	def __init__(self): 
-		print("Trying to Connect...")
-		print("Connection has been made.")
 		self.waitForLogin()
 
 	def createOnlineList(self):
@@ -68,6 +66,8 @@ s.bind((IP,port))
 s.listen(5)
 
 while True:
+	print("waiting for connections...")
 	conn, addr = s.accept()
 	Server().createOnlineList()
 	_start_new_thread(Server().__init__,())
+	print("Connection has been made")
