@@ -1,5 +1,6 @@
 import socket
-IP = "10.10.19.162"
+from threading import _start_new_thread
+IP = "10.10.19.21"
 port = 30000
 buffer = 1024
 applicationName = "Project Mercury"
@@ -7,17 +8,14 @@ applicationName = "Project Mercury"
 class Server():
 	def __init__(self): 
 		print("Trying to Connect...")
-		self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		self.s.bind((IP,port))
-		self.s.listen(5)
-		self.conn, self.addr = self.s.accept()
 		print("Connection has been made.")
 		self.waitForLogin()
 
-
+	def createOnlineList(self):
+		self.onlineList = []
 
 	def waitForLogin(self):
-		self.loginstuff = self.conn.recv(buffer).decode('utf-8')
+		self.loginstuff = conn.recv(buffer).decode('utf-8')
 		if self.loginstuff[0] == "#":
 			self.createNewLogin()
 		else:
@@ -34,9 +32,10 @@ class Server():
 		with open("accounts.txt","r") as openfile:
 			for line in openfile:
 				if self.tocheck in line:
-					self.conn.send("LoginIsGood".encode('utf-8'))
+					conn.send("LoginIsGood".encode('utf-8'))
 				else:
-					self.conn.send("LoginIsBad".encode('utf-8'))
+					conn.send("LoginIsBad".encode('utf-8'))
+					self.waitForLogin()
 
 
 	def createNewLogin(self):
@@ -48,10 +47,27 @@ class Server():
 		self.usernameCreate = self.loginstuff[1:self.passwordpoint]
 		self.passwordCreate = self.loginstuff[self.passwordpoint+1:self.emailpoint]
 		self.emailCreate = self.loginstuff[self.emailpoint+1:]
-		print(self.usernameCreate,self.passwordCreate,self.emailCreate)
 		with open ("accounts.txt","a") as openfile:
-			openfile.write(self.usernameCreate+self.passwordCreate)
+			openfile.write("\n"+self.usernameCreate+self.passwordCreate)
 			openfile.close()
-			print("Created new account")
+		with open ("emails.txt","a") as emailfile:
+			emailfile.write("\n"+self.usernameCreate+self.emailCreate)
+			emailfile.close()
+		conn.send("CreationIsGood")
+		self.waitForLogin()
+	def onlineListFunc(self):
+		conn.send("Online:"+self.onlineList)
 
-Server().__init__()
+	def messageHandling(self):
+		while True:
+			self.data = conn.recv(buffer).decode('utf-8')
+			print(self.data)
+
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.bind((IP,port))
+s.listen(5)
+
+while True:
+	conn, addr = s.accept()
+	Server().createOnlineList()
+	_start_new_thread(Server().__init__,())
