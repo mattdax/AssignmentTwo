@@ -56,9 +56,9 @@ class Server():
 					#	self.toSend = self.onlineList[i]
 					#	conn.send(self.toSend[1].encode('utf-8'))
 					self.waitForMessages()
-				else:
-					conn.send("LoginIsBad".encode('utf-8'))
-					self.waitForLogin()
+			else:
+				conn.send("LoginIsBad".encode('utf-8'))
+				self.waitForLogin()
 
 	def sendOnline(self):
 		self.usersToSend = ""
