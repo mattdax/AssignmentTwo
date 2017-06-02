@@ -50,7 +50,6 @@ class Server():
 		with open("accounts.txt","r") as openfile:
 			for line in openfile:
 				if self.tocheck in line:
-					conn.send("LoginIsGood".encode('utf-8'))
 					self.onlineList.append([self.username,addr])
 					self.sendOnline()
 					#for i in range(0,len(self.onlineList),1):
@@ -66,7 +65,8 @@ class Server():
 		for i in range(0,len(self.onlineList),1):
 			self.scrapusers = self.onlineList[i]
 			self.usersToSend += self.scrapusers[0]+","
-		conn.send("Online:")
+			print(self.usersToSend)
+		conn.send(("Online:"+self.usersToSend).encode('utf-8'))
 
 
 
